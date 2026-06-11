@@ -86,12 +86,22 @@ client.sendall(
 
 print("SESSION KEY SENT")
 
+video_path = "test_files/video.mp4"
+
+if len(sys.argv) > 1:
+
+    video_path = sys.argv[1]
+
 metadata = {
-    "filename": "video.mp4",
-    "size": os.path.getsize(
-        "test_files/video.mp4"
+    "filename": os.path.basename(
+        video_path
     ),
-    "timestamp": str(time.time())
+    "size": os.path.getsize(
+        video_path
+    ),
+    "timestamp": str(
+        time.time()
+    )
 }
 
 metadata_bytes = json.dumps(
@@ -138,8 +148,17 @@ print("METADATA SENT")
 # READ VIDEO
 # =====================
 
+import sys
+
+video_path = "test_files/video.mp4"
+
+if len(sys.argv) > 1:
+
+    video_path = sys.argv[1]
+
+
 with open(
-    "test_files/video.mp4",
+    video_path,
     "rb"
 ) as f:
 

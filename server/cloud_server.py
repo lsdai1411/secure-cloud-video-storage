@@ -17,6 +17,23 @@ import base64
 from crypto.rsa_utils import *
 from crypto.aes_utils import *
 from crypto.hash_utils import *
+from logs.logger import write_log
+
+
+def get_network_mode():
+
+    try:
+
+        with open(
+            "server/network_mode.txt",
+            "r"
+        ) as f:
+
+            return f.read().strip()
+
+    except:
+
+        return "NORMAL"
 
 used_timestamps = set()
 
@@ -46,6 +63,7 @@ message = client_socket.recv(
 # =====================
 
 if message == "HELLO":
+
     is_download = False
 
     client_socket.send(
@@ -287,7 +305,6 @@ if is_download:
 
 import json
 import time
-from logs.logger import write_log
 
 metadata_length = int.from_bytes(
     client_socket.recv(4),
@@ -481,8 +498,6 @@ else:
 
     print("FILE SAVED")
 
-    from logs.logger import write_log
-
     write_log(
         f"UPLOAD SUCCESS - {metadata['filename']}"
     )
@@ -491,12 +506,31 @@ else:
 
     # time.sleep(6)
 
-    client_socket.send(
-        b"ACK"
-    )
+    mode = get_network_mode()
 
-    print("ACK SENT")
+    if mode == "PACKET_LOSS":
 
+        write_log(
+            "PACKET LOSS SIMULATED"
+        )
+
+        client_socket.send(
+            b"NACK"
+        )
+
+        print(
+            "NACK SENT"
+        )
+
+    else:
+
+        client_socket.send(
+            b"ACK"
+        )
+
+        print(
+            "ACK SENT"
+        )
 
 
 

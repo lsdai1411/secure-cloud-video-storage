@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+
+cloud_storage/*.mp4
+downloads/*.mp4
+test_files/*.mp4
+
+*.bin
+
+logs/system.log
+
+video_restored.mp4

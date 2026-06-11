@@ -1,0 +1,384 @@
+import sys
+import os
+
+sys.path.append(
+    os.path.dirname(
+        os.path.dirname(
+            os.path.abspath(__file__)
+        )
+    )
+)
+
+import socket
+import base64
+
+# from crypto.aes_utils import decrypt_data
+# from crypto.hash_utils import verify_hash
+from crypto.rsa_utils import *
+from crypto.aes_utils import *
+from crypto.hash_utils import *
+
+HOST = "127.0.0.1"
+PORT = 9999
+
+server = socket.socket(
+    socket.AF_INET,
+    socket.SOCK_STREAM
+)
+
+server.bind((HOST, PORT))
+server.listen(1)
+
+print("SERVER STARTED")
+
+client_socket, address = server.accept()
+
+print("CLIENT:", address)
+
+message = client_socket.recv(
+    1024
+).decode()
+
+# =====================
+# UPLOAD MODE
+# =====================
+
+if message == "HELLO":
+    is_download = False
+
+    client_socket.send(
+        b"READY"
+    )
+
+    print("UPLOAD MODE")
+    print("READY SENT")
+
+
+
+# =====================
+# DOWNLOAD MODE
+# =====================
+
+elif message == "DOWNLOAD":
+    is_download = True
+
+    client_socket.send(
+        b"READY"
+    )
+
+    print("DOWNLOAD MODE")
+    print("READY SENT")
+
+# =====================
+# GỬI PUBLIC KEY CLOUD
+# =====================
+
+with open(
+    "keys/cloud_public.pem",
+    "rb"
+) as f:
+
+    public_key_bytes = f.read()
+
+client_socket.sendall(
+    public_key_bytes
+)
+
+print("PUBLIC KEY SENT")
+
+# =====================
+# NHẬN SESSION KEY
+# =====================
+
+encrypted_session_key = client_socket.recv(
+    4096
+)
+
+cloud_private = load_private_key(
+    "keys/cloud_private.pem"
+)
+
+session_key = rsa_decrypt(
+    encrypted_session_key,
+    cloud_private
+)
+
+print(
+    "SESSION KEY:",
+    base64.b64encode(session_key).decode()
+)
+
+if is_download:
+
+    print("DOWNLOAD HANDSHAKE SUCCESS")
+
+    # =====================
+    # RECEIVE REQUEST
+    # =====================
+
+    request_length = int.from_bytes(
+        client_socket.recv(4),
+        "big"
+    )
+
+    request_bytes = client_socket.recv(
+        request_length
+    )
+
+    signature_length = int.from_bytes(
+        client_socket.recv(4),
+        "big"
+    )
+
+    signature = client_socket.recv(
+        signature_length
+    )
+
+    # =====================
+    # VERIFY SIGNATURE
+    # =====================
+
+    sender_public = load_public_key(
+        "keys/sender_public.pem"
+    )
+
+    result = verify_signature(
+        request_bytes,
+        signature,
+        sender_public
+    )
+
+    print()
+    print("DOWNLOAD REQUEST:")
+    print(request_bytes.decode())
+
+    print()
+    print(
+        "AUTH VALID:",
+        result
+    )
+
+if result:
+
+    client_socket.send(
+        b"ACK_AUTH"
+    )
+
+    # =====================
+    # READ VIDEO
+    # =====================
+
+    with open(
+        "cloud_storage/video.mp4",
+        "rb"
+    ) as f:
+
+        video_data = f.read()
+
+    print()
+    print(
+        "VIDEO SIZE:",
+        len(video_data),
+        "bytes"
+    )
+
+    # =====================
+    # AES ENCRYPT
+    # =====================
+
+    iv, ciphertext = encrypt_data(
+        video_data,
+        session_key
+    )
+
+    print(
+        "VIDEO ENCRYPTED"
+    )
+
+    # =====================
+    # HASH
+    # =====================
+
+    hash_value = calculate_hash(
+        iv + ciphertext
+    )
+
+    print(
+        "HASH CREATED"
+    )
+
+else:
+
+    client_socket.send(
+        b"NACK_AUTH"
+    )
+
+client_socket.close()
+server.close()
+exit()
+
+import json
+
+metadata_length = int.from_bytes(
+    client_socket.recv(4),
+    "big"
+)
+
+metadata_bytes = client_socket.recv(
+    metadata_length
+)
+
+signature_length = int.from_bytes(
+    client_socket.recv(4),
+    "big"
+)
+
+signature = client_socket.recv(
+    signature_length
+)
+
+sender_public = load_public_key(
+    "keys/sender_public.pem"
+)
+
+result = verify_signature(
+    metadata_bytes,
+    signature,
+    sender_public
+)
+
+metadata = json.loads(
+    metadata_bytes.decode()
+)
+
+print()
+print("METADATA:")
+print(metadata)
+
+print()
+print(
+    "SIGNATURE VALID:",
+    result
+)
+
+
+# =====================
+# RECEIVE IV
+# =====================
+
+iv_length = int.from_bytes(
+    client_socket.recv(4),
+    "big"
+)
+
+iv = client_socket.recv(
+    iv_length
+)
+
+# =====================
+# RECEIVE CIPHERTEXT
+# =====================
+
+cipher_length = int.from_bytes(
+    client_socket.recv(8),
+    "big"
+)
+
+ciphertext = b""
+
+while len(ciphertext) < cipher_length:
+
+    chunk = client_socket.recv(
+        min(4096, cipher_length - len(ciphertext))
+    )
+
+    ciphertext += chunk
+
+# =====================
+# RECEIVE HASH
+# =====================
+
+hash_length = int.from_bytes(
+    client_socket.recv(4),
+    "big"
+)
+
+received_hash = client_socket.recv(
+    hash_length
+).decode()
+
+print()
+print("VIDEO RECEIVED")
+
+# =====================
+# VERIFY HASH
+# =====================
+
+hash_ok = verify_hash(
+    iv + ciphertext,
+    received_hash
+)
+
+# import random
+
+# if random.random() < 0.3:
+
+#     print("PACKET LOST")
+
+#     client_socket.close()
+
+#     exit()
+
+print(
+    "HASH VALID:",
+    hash_ok
+)
+
+if not hash_ok:
+
+    client_socket.send(
+        b"NACK"
+    )
+
+else:
+
+    video_data = decrypt_data(
+        ciphertext,
+        session_key,
+        iv
+    )
+
+    with open(
+        "cloud_storage/video.mp4",
+        "wb"
+    ) as f:
+
+        f.write(video_data)
+
+    print("FILE SAVED")
+
+    # import time
+
+    # time.sleep(6)
+
+    client_socket.send(
+        b"ACK"
+    )
+
+    print("ACK SENT")
+
+
+
+
+# print()
+# print("RAW METADATA:")
+# print(metadata_bytes)
+
+# print()
+# print(
+#     "SIGNATURE VALID:",
+#     result
+# )
+
+client_socket.close()
+server.close()

@@ -18,6 +18,8 @@ from crypto.rsa_utils import *
 from crypto.aes_utils import *
 from crypto.hash_utils import *
 
+used_timestamps = set()
+
 HOST = "127.0.0.1"
 PORT = 9999
 
@@ -104,8 +106,7 @@ session_key = rsa_decrypt(
 )
 
 print(
-    "SESSION KEY:",
-    base64.b64encode(session_key).decode()
+    "SESSION KEY ESTABLISHED"
 )
 
 if is_download:
@@ -285,6 +286,8 @@ if is_download:
     exit()
 
 import json
+import time
+from logs.logger import write_log
 
 metadata_length = int.from_bytes(
     client_socket.recv(4),
@@ -327,6 +330,52 @@ print(
     "SIGNATURE VALID:",
     result
 )
+
+# =====================
+# ANTI REPLAY CHECK
+# =====================
+
+timestamp = float(
+    metadata["timestamp"]
+)
+
+if timestamp in used_timestamps:
+
+    print()
+    print(
+        "REPLAY DETECTED"
+    )
+
+    write_log(
+        "REPLAY DETECTED"
+    )
+
+    client_socket.close()
+    server.close()
+    exit()
+
+used_timestamps.add(
+    timestamp
+)
+
+current_time = time.time()
+
+if abs(
+    current_time - timestamp
+) > 30:
+
+    print()
+    print(
+        "EXPIRED REQUEST"
+    )
+
+    write_log(
+        "EXPIRED REQUEST"
+    )
+
+    client_socket.close()
+    server.close()
+    exit()
 
 
 # =====================
@@ -405,6 +454,10 @@ if not hash_ok:
 
     client_socket.send(
         b"NACK"
+    )
+
+    write_log(
+        "INTEGRITY ERROR"
     )
 
     write_log(

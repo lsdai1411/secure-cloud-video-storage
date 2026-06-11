@@ -127,11 +127,13 @@ SERVER: NACK
 
 ### Server GUI
 
-(Thêm ảnh sau)
+<img width="446" height="356" alt="image" src="https://github.com/user-attachments/assets/46e6ed73-c18f-47d1-a18b-1fd43d8431e0" />
+
 
 ### Client GUI
 
-(Thêm ảnh sau)
+<img width="447" height="244" alt="image" src="https://github.com/user-attachments/assets/490f30ed-8252-400c-a1bd-fbc3c174c151" />
+
 
 ---
 

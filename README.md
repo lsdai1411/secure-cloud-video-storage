@@ -1,158 +1,206 @@
-# 🔐 Secure Cloud Video Storage
+🔐 Secure Cloud Video Storage
+Bài tập lớn môn học "Nhập môn An toàn và Bảo mật Thông tin"
 
-Mô phỏng hệ thống lưu trữ video đám mây an toàn sử dụng các kỹ thuật An toàn & Bảo mật Thông tin.
+Giảng viên hướng dẫn: TS. Trần Quý Nam
+Nhóm thực hiện: Nhóm 7
+Trường: Đại học Đại Nam
 
-## ✨ Tính năng
+📖 Giới thiệu
 
-* 📤 Upload video an toàn
-* 📥 Download video an toàn
-* 🔒 Mã hóa AES-GCM
-* 🔑 Trao đổi khóa RSA
-* ✍️ Chữ ký số (Digital Signature)
-* 🛡️ Kiểm tra toàn vẹn dữ liệu (SHA-256)
-* 🚫 Chống Replay Attack
-* 📝 Security Logging
-* 🌐 Mô phỏng lỗi mạng (Packet Loss)
-* 🖥️ Giao diện Client & Server bằng Tkinter
+Hệ thống mô phỏng quá trình lưu trữ video đám mây an toàn, áp dụng các cơ chế bảo mật như mã hóa dữ liệu, trao đổi khóa, xác thực người gửi và kiểm tra tính toàn vẹn của dữ liệu.
 
----
-
-## 🏗️ Kiến trúc hệ thống
-
+✨ Chức năng chính
+📤 Upload video an toàn
+📥 Download video an toàn
+🔒 Mã hóa video bằng AES-GCM
+🔑 Trao đổi khóa bằng RSA
+✍️ Xác thực bằng chữ ký số (Digital Signature)
+🛡️ Kiểm tra tính toàn vẹn bằng SHA-256
+🚫 Chống Replay Attack
+📝 Ghi nhật ký bảo mật (Security Logging)
+🔄 Tự động gửi lại khi mạng lỗi (Retry Mechanism)
+🌐 Mô phỏng mất gói tin (Packet Loss)
+🖥️ Giao diện Client và Server bằng Tkinter
+🏗️ Mô hình hệ thống
 Client
-↓
-RSA Key Exchange
-↓
-AES Session Key
-↓
-Encrypted Video
-↓
+   │
+   │ RSA Public Key
+   ▼
+Tạo khóa phiên AES
+   │
+   │ Mã hóa video
+   ▼
+Video đã mã hóa
+   │
+   │ SHA-256 Hash
+   │ Digital Signature
+   ▼
 Cloud Server
+   │
+   ├── Xác thực chữ ký số
+   ├── Kiểm tra toàn vẹn dữ liệu
+   ├── Giải mã video
+   └── Lưu trữ video
+🔐 Các cơ chế bảo mật được sử dụng
+Cơ chế	Mục đích
+AES-GCM	Mã hóa video
+RSA	Trao đổi khóa phiên
+Digital Signature	Xác thực người gửi
+SHA-256	Kiểm tra tính toàn vẹn
+Anti-Replay	Chống gửi lại gói tin
+Security Logging	Ghi nhận sự kiện bảo mật
+📂 Cấu trúc thư mục
+secure-cloud-video-storage/
+│
+├── client/
+├── server/
+├── crypto/
+├── logs/
+├── keys/
+├── cloud_storage/
+├── downloads/
+├── test_files/
+│
+├── generate_keys.py
+├── requirements.txt
+└── README.md
+⚙️ Yêu cầu môi trường
+Python 3.10 trở lên
+Windows 10 hoặc Windows 11
+Kết nối localhost
 
----
+Kiểm tra phiên bản Python:
 
-## 🔐 Cơ chế bảo mật
+python --version
+🚀 Hướng dẫn cài đặt
+Bước 1: Clone dự án
+git clone https://github.com/lsdai1411/secure-cloud-video-storage.git
 
-| Cơ chế            | Mô tả                    |
-| ----------------- | ------------------------ |
-| AES-GCM           | Mã hóa video             |
-| RSA               | Trao đổi khóa phiên      |
-| Digital Signature | Xác thực metadata        |
-| SHA-256           | Kiểm tra toàn vẹn        |
-| Anti-Replay       | Chống gửi lại gói tin    |
-| Security Log      | Ghi nhận sự kiện bảo mật |
+cd secure-cloud-video-storage
+Bước 2: Cài đặt thư viện
+pip install -r requirements.txt
+Bước 3: Tạo khóa RSA
+python generate_keys.py
 
----
+Nếu thành công sẽ xuất hiện:
 
-## 🌐 Chế độ mạng
+KEYS CREATED
 
-### NORMAL
+Thư mục keys/ sẽ được tạo tự động.
 
-Upload/Download hoạt động bình thường.
+▶️ Hướng dẫn chạy chương trình
+Chạy Server
 
-```text
+Mở Terminal:
+
+python server/server_gui.py
+
+Sau đó bấm:
+
+Start Server
+
+Trạng thái:
+
+Server Running
+Chạy Client
+
+Mở Terminal khác:
+
+python client/client_gui.py
+📤 Upload video
+Bấm Browse
+Chọn video
+Bấm Upload
+
+Nếu thành công:
+
+UPLOAD SUCCESS
+SERVER: ACK
+📥 Download video
+
+Bấm:
+
+Download
+
+Video tải về sẽ được lưu tại:
+
+downloads/video.mp4
+
+Nếu thành công:
+
+DOWNLOAD SUCCESS
 ACK
-```
+🌐 Chế độ mạng
+NORMAL
 
-### PACKET LOSS
+Hoạt động bình thường.
+
+Server phản hồi:
+
+ACK
+PACKET LOSS
 
 Mô phỏng mất gói tin.
 
-```text
+Server phản hồi:
+
 NACK
-```
 
----
+Client sẽ tự động gửi lại tối đa 3 lần.
 
-## 📂 Cấu trúc thư mục
+📝 Nhật ký bảo mật
 
-```text
-client/
-server/
-crypto/
-logs/
-keys/
-cloud_storage/
-test_files/
-```
+Các sự kiện bảo mật sẽ được ghi lại trên Server.
 
----
+Ví dụ:
 
-## 🚀 Cách chạy
+UPLOAD SUCCESS - video.mp4
+ACK
 
-### 1. Clone dự án
+DOWNLOAD SUCCESS - video.mp4
+ACK
 
-```bash
-git clone https://github.com/lsdai1411/secure-cloud-video-storage.git
-cd secure-cloud-video-storage
-```
+INTEGRITY ERROR
+NACK
+🧪 Chức năng đã kiểm thử
+✅ Upload video
+✅ Download video
+✅ Mã hóa AES-GCM
+✅ Trao đổi khóa RSA
+✅ Kiểm tra SHA-256
+✅ Xác thực chữ ký số
+✅ Chống Replay Attack
+✅ Retry Mechanism
+✅ Packet Loss Simulation
+✅ Clone mới và chạy thành công
+📸 Hình ảnh minh họa
+Giao diện Server
 
-### 2. Cài thư viện
+(Thêm ảnh tại đây)
 
-```bash
-pip install -r requirements.txt
-```
+Giao diện Client
 
-### 3. Khởi động Server
+(Thêm ảnh tại đây)
 
-```bash
-python server/server_gui.py
-```
+Upload thành công
 
-### 4. Khởi động Client
+(Thêm ảnh tại đây)
 
-```bash
-python client/client_gui.py
-```
+Download thành công
 
----
+(Thêm ảnh tại đây)
 
-## 🧪 Demo
+👨‍💻 Công nghệ sử dụng
+Python
+Socket Programming
+Tkinter
+AES-GCM
+RSA-2048
+SHA-256
+Cryptography
 
-### Upload thành công
+🎯 Mục tiêu dự án
 
-```text
-SERVER: ACK
-```
+Dự án được xây dựng nhằm mô phỏng hệ thống lưu trữ video đám mây an toàn, giúp sinh viên nghiên cứu và thực hành các cơ chế bảo mật thông tin trong quá trình truyền tải và lưu trữ dữ liệu.
 
-### Mô phỏng lỗi mạng
-
-```text
-SERVER: NACK
-```
-
----
-
-## 📸 Giao diện
-
-### Server GUI
-
-<img width="446" height="356" alt="image" src="https://github.com/user-attachments/assets/46e6ed73-c18f-47d1-a18b-1fd43d8431e0" />
-
-
-### Client GUI
-
-<img width="447" height="244" alt="image" src="https://github.com/user-attachments/assets/490f30ed-8252-400c-a1bd-fbc3c174c151" />
-
-
----
-
-## 👨‍💻 Công nghệ sử dụng
-
-* Python
-* Socket Programming
-* Tkinter
-* AES-GCM
-* RSA
-* SHA-256
-
----
-
-## 📚 Học phần
-
-**Nhập môn An toàn và Bảo mật Thông tin**
-Năm học 2025 - 2026
-
----
-
-⭐ Dự án được xây dựng nhằm mô phỏng quy trình lưu trữ video đám mây an toàn với các cơ chế bảo mật cơ bản và nâng cao.
+⭐ Dự án được phát triển phục vụ mục đích học tập và nghiên cứu trong học phần Nhập môn An toàn và Bảo mật Thông tin tại Trường Đại học Đại Nam.

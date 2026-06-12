@@ -2,8 +2,8 @@
 
 ## Bài tập lớn môn học "Nhập môn An toàn và Bảo mật Thông tin"
 
-**Giảng viên hướng dẫn:** TS. Trần Quý Nam
-**Nhóm thực hiện:** Nhóm 7
+**Giảng viên hướng dẫn:** TS. Trần Quý Nam<br>
+**Nhóm thực hiện:** Nhóm 7<br>
 **Trường:** Đại học Đại Nam
 
 ---
@@ -300,6 +300,20 @@ NACK
 
 ## 🎯 Mục tiêu dự án
 
-Dự án được xây dựng nhằm mô phỏng hệ thống lưu trữ video đám mây an toàn, giúp sinh viên nghiên cứu và thực hành các cơ chế bảo mật thông tin trong quá trình truyền tải và lưu trữ dữ liệu.
+Dự án được xây dựng nhằm nghiên cứu, mô phỏng và triển khai các cơ chế bảo mật thông tin trong quá trình truyền tải và lưu trữ dữ liệu trên môi trường đám mây.
 
-⭐ Dự án được phát triển phục vụ mục đích học tập và nghiên cứu trong học phần **Nhập môn An toàn và Bảo mật Thông tin** tại **Trường Đại học Đại Nam**.
+Thông qua dự án, nhóm hướng đến việc:
+
+* Tìm hiểu nguyên lý hoạt động của các thuật toán mật mã hiện đại.
+* Áp dụng RSA trong trao đổi khóa an toàn.
+* Áp dụng AES-GCM trong mã hóa dữ liệu video.
+* Sử dụng chữ ký số để xác thực nguồn gốc dữ liệu.
+* Kiểm tra tính toàn vẹn dữ liệu bằng SHA-256.
+* Mô phỏng các tình huống mất gói tin và lỗi mạng trong thực tế.
+* Xây dựng hệ thống Client – Server có khả năng upload và download dữ liệu an toàn.
+
+Dự án đồng thời giúp sinh viên củng cố kiến thức về lập trình mạng, mật mã học ứng dụng và các nguyên tắc cơ bản trong lĩnh vực An toàn và Bảo mật Thông tin.
+
+---
+
+⭐ Dự án được thực hiện bởi **Nhóm 7 – Trường Đại học Đại Nam** dưới sự hướng dẫn của **TS. Trần Quý Nam**, phục vụ mục đích học tập, nghiên cứu và thực hành các kỹ thuật bảo mật thông tin trong môi trường lưu trữ đám mây.

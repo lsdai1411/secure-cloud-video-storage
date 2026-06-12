@@ -62,10 +62,7 @@ print(
 session_key = generate_session_key()
 
 print(
-    "SESSION KEY:",
-    base64.b64encode(
-        session_key
-    ).decode()
+    "SESSION KEY GENERATED"
 )
 
 # RSA ENCRYPT

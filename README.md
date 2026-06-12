@@ -278,6 +278,26 @@ NACK
 <img width="447" height="201" alt="image" src="https://github.com/user-attachments/assets/462e01b1-12e7-409f-b899-9879e50c16ad" />
 
 
+### Giao diện Upload Success
+
+<img width="534" height="625" alt="image" src="https://github.com/user-attachments/assets/3af2b1eb-ec39-40b2-8b97-0a6690e271d6" />
+
+
+### Giao diện Download Success
+
+<img width="534" height="626" alt="image" src="https://github.com/user-attachments/assets/d3fb061d-151e-4517-a739-afd50971fe3f" />
+
+
+### Giao diện Retry Mechanism
+
+<img width="700" height="630" alt="image" src="https://github.com/user-attachments/assets/c8272936-fbb4-4cbd-9093-189353338250" />
+
+
+### Giao diện Security Log
+
+<img width="409" height="185" alt="image" src="https://github.com/user-attachments/assets/6ff4b393-5933-46a9-b122-c56554b230c0" />
+
+
 ---
 
 ## 👨‍💻 Công nghệ sử dụng

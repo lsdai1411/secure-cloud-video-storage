@@ -239,6 +239,12 @@ print(
 # SAVE VIDEO
 # =====================
 
+
+os.makedirs(
+    "downloads",
+    exist_ok=True
+)
+
 with open(
     "downloads/video.mp4",
     "wb"

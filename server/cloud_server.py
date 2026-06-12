@@ -1,6 +1,18 @@
 import sys
 import os
 
+
+BASE_DIR = os.path.dirname(
+    os.path.dirname(
+        os.path.abspath(__file__)
+    )
+)
+
+CLOUD_STORAGE = os.path.join(
+    BASE_DIR,
+    "cloud_storage"
+)
+
 sys.path.append(
     os.path.dirname(
         os.path.dirname(
@@ -191,8 +203,14 @@ while True:
                 # READ VIDEO
                 # =====================
 
+
+                file_path = os.path.join(
+                    CLOUD_STORAGE,
+                    "video.mp4"
+                )
+                
                 with open(
-                    "cloud_storage/video.mp4",
+                    file_path,
                     "rb"
                 ) as f:
 
@@ -496,9 +514,18 @@ while True:
                 session_key,
                 iv
             )
+            os.makedirs(
+                "cloud_storage",
+                exist_ok=True
+            )
 
+            file_path = os.path.join(
+                CLOUD_STORAGE,
+                "video.mp4"
+            )
+            
             with open(
-                "cloud_storage/video.mp4",
+                file_path,
                 "wb"
             ) as f:
 

@@ -276,14 +276,6 @@ NACK
 
 *(Thêm ảnh tại đây)*
 
-### Upload thành công
-
-*(Thêm ảnh tại đây)*
-
-### Download thành công
-
-*(Thêm ảnh tại đây)*
-
 ---
 
 ## 👨‍💻 Công nghệ sử dụng

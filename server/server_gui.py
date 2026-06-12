@@ -46,6 +46,18 @@ def update_network_mode():
             network_mode.get()
         )
 
+import os
+
+if not os.path.exists(
+    "logs/system.log"
+):
+
+    open(
+        "logs/system.log",
+        "w",
+        encoding="utf-8"
+    ).close()
+
 
 def refresh_logs():
 

@@ -270,11 +270,13 @@ NACK
 
 ### Giao diện Server
 
-*(Thêm ảnh tại đây)*
+<img width="449" height="383" alt="image" src="https://github.com/user-attachments/assets/4ce2e568-0c34-4923-b264-e2fe80ca4ac4" />
+
 
 ### Giao diện Client
 
-*(Thêm ảnh tại đây)*
+<img width="447" height="201" alt="image" src="https://github.com/user-attachments/assets/462e01b1-12e7-409f-b899-9879e50c16ad" />
+
 
 ---
 
